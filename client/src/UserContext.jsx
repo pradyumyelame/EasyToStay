@@ -2,7 +2,7 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 
 // ✅ Fix: Add these lines
-axios.defaults.baseURL = "http://localhost:3030";
+axios.defaults.baseURL = "https://easytostay-backend.onrender.com";
 axios.defaults.withCredentials = true;
 
 export const UserContext = createContext({});

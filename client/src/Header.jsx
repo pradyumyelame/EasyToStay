@@ -41,7 +41,7 @@ const Header = () => {
         <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden flex items-center justify-center">
           {user?.profilePic ? (
             <img
-              src={`http://localhost:3030${user.profilePic}`}
+              src={`https://easytostay-backend.onrender.com${user.profilePic}`}
               alt="Profile"
               className="w-full h-full object-cover"
             />

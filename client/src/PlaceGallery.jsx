@@ -29,7 +29,7 @@ export default function PlaceGallery({ place }) {
                <div key={index} className="block m-auto">
                  <img
                    className=""
-                   src={`http://localhost:3030/uploads/${photo}`}
+                   src={`https://easytostay-backend.onrender.com/uploads/${photo}`}
                    alt={place.title}
                  />
                </div>

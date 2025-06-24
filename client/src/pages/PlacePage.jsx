@@ -104,7 +104,7 @@ export default function PlacePage() {
               <h2 className="font-semibold text-2xl mb-2">Owner Details</h2>
               <div className="flex items-center mt-4 bg-gray-100 p-6 rounded-md shadow-sm">
                 <img
-                  src={`http://localhost:3030${place.owner.profilePic}`}
+                  src={`https://easytostay-backend.onrender.com${place.owner.profilePic}`}
                   alt={`${place.owner.name}'s profile`}
                   className="w-16 h-16 rounded-full object-cover"
                 />

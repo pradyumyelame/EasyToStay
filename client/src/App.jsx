@@ -12,7 +12,7 @@ import PlacePage from './pages/PlacePage';
 import PlacesFormPage from './pages/PlacesFormPage';
 import BookingsPage from './pages/BookingsPage';
 import BookingPage from './pages/BookingPage';
-axios.defaults.baseURL = 'http://localhost:3030';
+axios.defaults.baseURL = 'https://easytostay-backend.onrender.com';
 axios.defaults.withCredentials = true;
 const App = () => {
   return (

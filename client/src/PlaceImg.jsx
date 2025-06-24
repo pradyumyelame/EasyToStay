@@ -8,7 +8,7 @@ export default function PlaceImg({ place,index=0,className=null }) {
   return (
     
       <img
-        src={`http://localhost:3030/uploads/${place.photos[index]}`}
+        src={`https://easytostay-backend.onrender.com/uploads/${place.photos[index]}`}
         alt={`${place.title} preview`}
         className={className}
       />

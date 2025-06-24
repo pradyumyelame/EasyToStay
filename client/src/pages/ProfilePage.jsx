@@ -95,7 +95,7 @@ const ProfilePage = () => {
                 {formData.profilePic && (
                   <label htmlFor="fileUpload">
                     <img
-                      src={`http://localhost:3030${formData.profilePic}`}
+                      src={`https://easytostay-backend.onrender.com${formData.profilePic}`}
                       alt="Profile Preview"
                       title="Click to update profile"
                       className="w-24 h-24 mx-auto mt-2 cursor-pointer rounded-full object-cover"
@@ -169,7 +169,7 @@ const ProfilePage = () => {
           ) : (
             <div>
               <img
-                src={`http://localhost:3030${formData.profilePic}`}
+                src={`https://easytostay-backend.onrender.com${formData.profilePic}`}
                 alt="Profile"
                 className="w-16 h-16 mx-auto my-2 rounded-full object-cover"
               />

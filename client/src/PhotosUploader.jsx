@@ -83,7 +83,7 @@ const PhotosUploader = ({ addedPhotos, onChange }) => {
           addedPhotos.map((link) => (
             <div className="h-32 flex relative" key={link}>
               <img
-                src={"http://localhost:3030/uploads/" + link}
+                src={"https://easytostay-backend.onrender.com/uploads/" + link}
                 className="rounded-xl w-full object-cover"
               />
               <button onClick={(ev)=>selectAsMainPhoto(ev,link)} className="absolute bottom-1 cursor-pointer text-white left-1 bg-black bg-opacity-50 rounded-md px-3 py-2 hover:bg-black">

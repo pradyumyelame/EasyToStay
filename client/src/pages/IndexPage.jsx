@@ -21,7 +21,7 @@ const IndexPage = () => {
               <div className="bg-gray-500 rounded-md flex mb-2">
                 {place.photos?.[0] && (
                   <img
-                    src={`http://localhost:3030/uploads/${place.photos?.[0]}`}
+                    src={`https://easytostay-backend.onrender.com/uploads/${place.photos?.[0]}`}
                     alt={`${place.title} preview`}
                     className="rounded-md object-cover aspect-square "
                   />
