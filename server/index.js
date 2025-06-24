@@ -24,7 +24,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use("/uploads/profile_pics", express.static(__dirname + "/uploads/profile_pics"));
 app.use(cors({
   credentials: true,
-  origin: "http://localhost:5173",
+  origin: "https://easy-to-stay-ykx5.vercel.app/",
 }));
 
 // MongoDB Connection
