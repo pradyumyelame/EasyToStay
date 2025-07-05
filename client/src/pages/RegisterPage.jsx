@@ -24,23 +24,10 @@ const RegisterPage = () => {
   async function registerUser(e) {
     e.preventDefault();
 
-    // Validation for empty fields
-    if (!name.trim()) {
-      toast.error("Name is required!");
-      return;
-    }
-    if (!email.trim()) {
-      toast.error("Email is required!");
-      return;
-    }
-    if (!password.trim()) {
-      toast.error("Password is required!");
-      return;
-    }
-    if (!profilePic) {
-      toast.error("Profile picture is required!");
-      return;
-    }
+    if (!name.trim()) return toast.error("Name is required!");
+    if (!email.trim()) return toast.error("Email is required!");
+    if (!password.trim()) return toast.error("Password is required!");
+    if (!profilePic) return toast.error("Profile picture is required!");
 
     const formData = new FormData();
     formData.append("name", name);
@@ -49,23 +36,25 @@ const RegisterPage = () => {
     formData.append("profilePic", profilePic);
 
     try {
-      await axios.post("/register", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `https://easytostay-backend.onrender.com/register`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       toast.success("User registered successfully. Please login!");
       setRedirect(true);
     } catch (e) {
-      toast.error("Registration failed. Please try again.");
+      console.error("Registration error:", e.response?.data || e.message);
+      toast.error(
+        e.response?.data?.message || "Registration failed. Please try again."
+      );
     }
   }
 
-  if (redirect) {
-    return <Navigate to={"/login"} />;
-  }
-
-  if (block) {
-    return <Navigate to={"/"} />;
-  }
+  if (redirect) return <Navigate to={"/login"} />;
+  if (block) return <Navigate to={"/"} />;
 
   return (
     <div className="mt-4 flex grow items-center justify-around">
@@ -120,10 +109,7 @@ const RegisterPage = () => {
           </button>
           <div className="text-center py-2 mt-3">
             <span className="text-gray-500">Already have an account? </span>
-            <Link
-              className="font-medium cursor-pointer text-primary"
-              to={"/login"}
-            >
+            <Link className="font-medium cursor-pointer text-primary" to={"/login"}>
               Login
             </Link>
           </div>

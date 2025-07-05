@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const User = require("./models/User.js");
 const Place = require("./models/Place.js");
-const Booking = require('./models/Booking.js');
+const Booking = require("./models/Booking.js");
 require("dotenv").config();
 
 const PORT = 3030;
@@ -22,10 +22,25 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use("/uploads/profile_pics", express.static(__dirname + "/uploads/profile_pics"));
-app.use(cors({
-  credentials: true,
-  origin: "https://easy-to-stay-ykx5.vercel.app/",
-}));
+
+// ✅ Updated CORS Middleware (Fixes trailing slash issue)
+const allowedOrigins = ["https://easy-to-stay-ykx5.vercel.app"];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -62,7 +77,7 @@ const profilePicMiddleware = multer({
       const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
       cb(null, uniqueName);
     },
-  })
+  }),
 });
 
 // Routes
@@ -228,11 +243,11 @@ app.get("/places", async (req, res) => {
 app.get("/place/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const place = await Place.findById(id).populate('owner');
+    const place = await Place.findById(id).populate("owner");
     res.json(place);
   } catch (err) {
-    console.error('Error fetching place:', err);
-    res.status(500).json({ error: 'Failed to fetch place details' });
+    console.error("Error fetching place:", err);
+    res.status(500).json({ error: "Failed to fetch place details" });
   }
 });
 
