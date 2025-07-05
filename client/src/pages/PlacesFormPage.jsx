@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "../axios"; // use your custom axios instance
+import axios from "../axios";
 import Perks from "../Perks";
 import { toast } from "react-toastify";
 import PhotosUploader from "../PhotosUploader";
@@ -78,20 +78,23 @@ export default function PlacesFormPage() {
 
     try {
       if (id) {
-        await axios.put(`/places/${id}`, placeData, { withCredentials: true });
+        await axios.put(`/places/${id}`, placeData); // PUT for update
         toast.success("Accommodation updated successfully");
       } else {
-        await axios.post("/places", placeData, { withCredentials: true });
+        await axios.post("/places", placeData); // POST for create
         toast.success("Accommodation added successfully");
       }
       setRedirect(true);
     } catch (err) {
-      console.error("Error updating accommodation", err);
+      console.error("Error saving accommodation", err);
       toast.error("Failed to save accommodation. Please try again.");
     }
   }
 
-  if (redirect) return <Navigate to="/account/places" />;
+  // ✅ Add redirect logic
+  if (redirect) {
+    return <Navigate to="/account/places" />;
+  }
 
   return (
     <div>
