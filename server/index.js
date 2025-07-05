@@ -23,9 +23,8 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use("/uploads/profile_pics", express.static(__dirname + "/uploads/profile_pics"));
 
-// ✅ Updated CORS Middleware (Fixes trailing slash issue)
+// ✅ CORS Middleware
 const allowedOrigins = ["https://easy-to-stay-ykx5.vercel.app"];
-
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -35,10 +34,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
+  if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
@@ -50,26 +46,21 @@ mongoose.connect(process.env.MONGO_URI)
 // JWT Middleware
 const authenticateJWT = (req, res, next) => {
   const { token } = req.cookies;
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized: No token provided" });
-  }
+  if (!token) return res.status(401).json({ error: "Unauthorized: No token provided" });
+
   jwt.verify(token, process.env.JWT_SECRET, (err, userData) => {
-    if (err) {
-      return res.status(403).json({ error: "Invalid token" });
-    }
+    if (err) return res.status(403).json({ error: "Invalid token" });
     req.user = userData;
     next();
   });
 };
 
-// Profile Pic Upload
+// Profile Pic Upload Middleware
 const profilePicMiddleware = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
       const uploadPath = `${__dirname}/uploads/profile_pics`;
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath, { recursive: true });
-      }
+      if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
@@ -85,19 +76,28 @@ app.get("/test", (req, res) => {
   res.json("Hello, from the backend!");
 });
 
+// ✅ UPDATED REGISTER ROUTE with email check
 app.post("/register", profilePicMiddleware.single("profilePic"), async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: "Email already exists" });
+    }
+
     const profilePicPath = req.file ? `/uploads/profile_pics/${req.file.filename}` : null;
+
     const userData = await User.create({
       name,
       email,
       password: bcrypt.hashSync(password, bcryptSalt),
       profilePic: profilePicPath,
     });
-    res.json(userData);
+
+    res.status(201).json(userData);
   } catch (err) {
-    console.error(err);
+    console.error("Registration error:", err);
     res.status(500).json({ error: "User registration failed" });
   }
 });
