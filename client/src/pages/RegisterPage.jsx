@@ -47,9 +47,14 @@ const RegisterPage = () => {
       setRedirect(true);
     } catch (e) {
       console.error("Registration error:", e.response?.data || e.message);
-      toast.error(
-        e.response?.data?.message || "Registration failed. Please try again."
-      );
+
+      if (e.response?.status === 409) {
+        toast.error("Email already exists!");
+      } else {
+        toast.error(
+          e.response?.data?.error || "Registration failed. Please try again."
+        );
+      }
     }
   }
 
@@ -109,7 +114,10 @@ const RegisterPage = () => {
           </button>
           <div className="text-center py-2 mt-3">
             <span className="text-gray-500">Already have an account? </span>
-            <Link className="font-medium cursor-pointer text-primary" to={"/login"}>
+            <Link
+              className="font-medium cursor-pointer text-primary"
+              to={"/login"}
+            >
               Login
             </Link>
           </div>

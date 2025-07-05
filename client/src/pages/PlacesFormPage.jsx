@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axios"; // use your custom axios instance
 import Perks from "../Perks";
 import { toast } from "react-toastify";
 import PhotosUploader from "../PhotosUploader";
@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Navigate, useParams } from "react-router-dom";
+
 export default function PlacesFormPage() {
   const { id } = useParams();
   const [addedPhotos, setAddedPhotos] = useState([]);
@@ -25,12 +26,10 @@ export default function PlacesFormPage() {
   const [extraInfo, setExtraInfo] = useState("");
   const [price, setPrice] = useState(0);
   const [redirect, setRedirect] = useState(false);
+
   useEffect(() => {
-    if (!id) {
-      return;
-    }
+    if (!id) return;
     axios.get(`/places/${id}`).then((response) => {
-      console.log(response);
       const { data } = response;
       setTitle(data?.title || "");
       setAddress(data?.address || "");
@@ -44,6 +43,7 @@ export default function PlacesFormPage() {
       setPrice(data?.price || 0);
     });
   }, [id]);
+
   function inputHeader(header) {
     return <h2 className="text-2xl mt-4">{header}</h2>;
   }
@@ -75,25 +75,24 @@ export default function PlacesFormPage() {
       extraInfo,
       price,
     };
+
     try {
       if (id) {
-        //update
-        await axios.put(`/places/${id}`, placeData );
+        await axios.put(`/places/${id}`, placeData, { withCredentials: true });
         toast.success("Accommodation updated successfully");
       } else {
-        await axios.post("/places", placeData);
+        await axios.post("/places", placeData, { withCredentials: true });
         toast.success("Accommodation added successfully");
       }
       setRedirect(true);
-    }
-    catch (err) {
-      console.error('Error updating accommodation', err);
-      toast.error('Failed to save accommodation. Please try again');
+    } catch (err) {
+      console.error("Error updating accommodation", err);
+      toast.error("Failed to save accommodation. Please try again.");
     }
   }
-  if (redirect) {
-    return <Navigate to={"/account/places"} />;
-  }
+
+  if (redirect) return <Navigate to="/account/places" />;
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -133,10 +132,7 @@ export default function PlacesFormPage() {
           <Perks selected={perks} onChange={setPerks} />
         </div>
 
-        {preInput(
-          "Check in & out times, Max guests",
-          "Add check-in and out times"
-        )}
+        {preInput("Check in & out times, Max guests", "Add check-in and out times")}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div className="mt-2 -mb-1">
             <label>Check in</label>
